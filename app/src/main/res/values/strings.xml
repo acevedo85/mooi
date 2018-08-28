@@ -2,7 +2,20 @@
     <string name="app_name">Mooi</string>
     <string name="drawer_open">Drawer Open</string>
     <string name="drawer_closed">Drawer Closed</string>
+<<<<<<< Updated upstream
     <string name="facebook_app_id">199688690707750</string>
     <string name="fb_login_protocol_scheme">fb199688690707750</string>
     <string name="login_error_title">Error!</string>
+=======
+    <string name="nav_home">Home</string>
+    <string name="nav_notification">Notification</string>
+    <string name="nav_business">Business</string>
+    <string name="nav_menu">Menu</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="delete_post">Delete post</string>
+    <string name="edit_post">Edit post</string>
+    <string name="nav_search">Map</string>
+>>>>>>> Stashed changes
 </resources>
