@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -128,8 +129,37 @@ public class SetupActivity extends AppCompatActivity {
                 LoadingBar.setCanceledOnTouchOutside(true);
 
                 Uri resultUri = result.getUri();
-                StorageReference filePath = UserProfileImageRef.child(currentUserID+".jpg");
-                filePath.putFile(resultUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                final StorageReference filePath = UserProfileImageRef.child(currentUserID+".jpg");
+                filePath.putFile(resultUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        filePath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                final Uri test = uri;
+                                final String downloadUrl = test.toString();
+                                UsersRef.child("profileimage").setValue(downloadUrl).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()){
+                                            Intent selfIntent = new Intent(SetupActivity.this, SetupActivity.class);
+                                            startActivity(selfIntent);
+
+                                            Toast.makeText(SetupActivity.this, "Profile Image stored to Firebase database successfully", Toast.LENGTH_SHORT).show();
+                                            LoadingBar.dismiss();
+                                        }else {
+                                            String message = task.getException().getMessage();
+                                            Toast.makeText(SetupActivity.this, "Error occurred: " + message, Toast.LENGTH_SHORT).show();
+                                            LoadingBar.dismiss();
+                                        }
+                                    }
+                                });
+
+                            }
+                        });
+                    }
+                });
+               /* filePath.putFile(resultUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
                         if (task.isSuccessful()){
@@ -153,7 +183,7 @@ public class SetupActivity extends AppCompatActivity {
                             });
                         }
                     }
-                });
+                });*/
             }
             else{
                 Toast.makeText(this, "Error occurred: Image cannot be cropped, try again", Toast.LENGTH_SHORT).show();
